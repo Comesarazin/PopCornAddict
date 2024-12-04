@@ -1,0 +1,39 @@
+{# templates/movie/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ data.title ?? data.name }}</h1>
+    <p>{{ data.overview }}</p>
+    <p>Date de sortie : {{ data.release_date ?? data.first_air_date }}</p>
+    <p>Note : {{ data.vote_average }}/10</p>
+    <a href="{{ path('home') }}">Retour à l'accueil</a>
+
+    <h2>Toutes les données</h2>
+    <ul>
+        {% for key, value in data %}
+            <li>
+                <strong>{{ key }}:</strong>
+                {% if value is iterable %}
+                    <ul>
+                        {% for subKey, subValue in value %}
+                            {% if subValue is iterable %}
+                                <li>
+                                    <strong>{{ subKey }}:</strong>
+                                    <ul>
+                                        {% for subSubKey, subSubValue in subValue %}
+                                            <li>{{ subSubKey }}: {{ subSubValue }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% else %}
+                                <li>{{ subKey }}: {{ subValue }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    {{ value }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
