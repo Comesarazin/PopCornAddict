@@ -1,0 +1,45 @@
+{# templates/movie/search.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form method="get" action="{{ path('movie_search') }}">
+        <input type="text" name="query" placeholder="Rechercher un film ou une série">
+        <button type="submit">Rechercher</button>
+    </form>
+
+    {% if error is defined %}
+        <p>{{ error }}</p>
+    {% endif %}
+
+    {% if movies is defined %}
+        <h2>Films</h2>
+        <ul>
+            {% for movie in movies %}
+                <li>
+                    <a href="{{ path('movie_show', {id: movie.id, type: 'movie'}) }}">
+                        {% if movie.poster_path %}
+                            <img src="https://image.tmdb.org/t/p/w200{{ movie.poster_path }}" alt="{{ movie.title }}">
+                        {% endif %}
+                        {{ movie.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if tvShows is defined %}
+        <h2>Séries TV</h2>
+        <ul>
+            {% for tvShow in tvShows %}
+                <li>
+                    <a href="{{ path('movie_show', {id: tvShow.id, type: 'tv'}) }}">
+                        {% if tvShow.poster_path %}
+                            <img src="https://image.tmdb.org/t/p/w200{{ tvShow.poster_path }}" alt="{{ tvShow.name }}">
+                        {% endif %}
+                        {{ tvShow.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
