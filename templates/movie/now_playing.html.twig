@@ -1,17 +1,12 @@
-{# templates/movie/search.html.twig #}
+{# templates/movie/now_playing.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block body %}
     <form method="get" action="{{ path('movie_search') }}">
-        <input type="text" name="query" placeholder="Rechercher un film ou une série">
+        <input type="text" name="query" placeholder="Rechercher un film">
         <button type="submit">Rechercher</button>
     </form>
-
-    {% if error is defined %}
-        <p>{{ error }}</p>
-    {% endif %}
-
-    <h2>Films</h2>
+    <h1>Films du moment</h1>
     <ul>
         {% for movie in movies %}
             <li>

@@ -1,0 +1,22 @@
+{# templates/tvshows/now_playing.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form method="get" action="{{ path('tvshows_search') }}">
+        <input type="text" name="query" placeholder="Rechercher une série">
+        <button type="submit">Rechercher</button>
+    </form>
+    <h1>Séries du moment</h1>
+    <ul>
+        {% for tvshow in tvshows %}
+            <li>
+                <a href="{{ path('tvshows_show', {id: tvshow.id}) }}">
+                    {% if tvshow.poster_path %}
+                        <img src="https://image.tmdb.org/t/p/w200{{ tvshow.poster_path }}" alt="{{ tvshow.name }}">
+                    {% endif %}
+                    {{ tvshow.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

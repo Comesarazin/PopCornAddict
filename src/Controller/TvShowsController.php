@@ -8,59 +8,55 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MovieController extends AbstractController
+class TvShowsController extends AbstractController
 {
     private $tmdbApiService;
-
+    
     public function __construct(TmdbApiService $tmdbApiService)
     {
         $this->tmdbApiService = $tmdbApiService;
     }
-
-    #[Route('/', name: 'home')]
-    public function home(): Response
-    {
-        return $this->render('home.html.twig');
-    }
     
-    #[Route('/movie', name: 'movie_now_playing')]
+    
+    #[Route('/tvshows', name: 'tvshows_now_playing')]
     public function nowPlaying(): Response
     {
-        $movies = $this->tmdbApiService->fetchNowPlayingMovies();
-
-        return $this->render('movie/now_playing.html.twig', [
-            'movies' => $movies,
+        $tvshows = $this->tmdbApiService->fetchNowPlayingTvShows();
+    
+        return $this->render('tvShows/now_playing.html.twig', [
+            'tvshows' => $tvshows,
         ]);
     }
 
-    #[Route('/movie/search', name: 'movie_search')]
+    #[Route('/tvshows/search', name: 'tvshows_search')]
     public function search(Request $request): Response
     {
         $query = $request->query->get('query');
 
         if (empty($query)) {
-            return $this->render('movie/search.html.twig', [
-                'movies' => [],
+            return $this->render('tvShows/search.html.twig', [
+                'tvshows' => [],
                 'error' => 'Veuillez entrer un terme de recherche.',
             ]);
         }
 
-        $movies = $this->tmdbApiService->searchMovies($query);
+        $tvshows = $this->tmdbApiService->searchTvShows($query);
 
-        return $this->render('movie/search.html.twig', [
-            'movies' => $movies,
+        return $this->render('tvShows/search.html.twig', [
+            'tvshows' => $tvshows,
         ]);
     }
 
-    #[Route('/movie/{id}', name: 'movie_show')]
+    #[Route('/tvshows/{id}', name: 'tvshows_show')]
     public function show(string $id): Response
     {
-        $data = $this->tmdbApiService->fetchMovieData($id);
+        $data = $this->tmdbApiService->fetchTvShowData($id);
 
-        return $this->render('movie/show.html.twig', [
+        return $this->render('tvShows/show.html.twig', [
             'data' => $data,
         ]);
     }
 
+    
 
 }
