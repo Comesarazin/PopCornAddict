@@ -16,12 +16,6 @@ class MovieController extends AbstractController
     {
         $this->tmdbApiService = $tmdbApiService;
     }
-
-    #[Route('/', name: 'home')]
-    public function home(): Response
-    {
-        return $this->render('home.html.twig');
-    }
     
     #[Route('/movie', name: 'movie_now_playing')]
     public function nowPlaying(): Response

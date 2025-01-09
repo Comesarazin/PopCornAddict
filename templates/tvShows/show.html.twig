@@ -2,38 +2,44 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>{{ data.title ?? data.name }}</h1>
-    <p>{{ data.overview }}</p>
-    <p>Date de sortie : {{ data.release_date ?? data.first_air_date }}</p>
-    <p>Note : {{ data.vote_average }}/10</p>
+<div class="tvshow-details">
+        <h1>{{ data.name }}</h1>
+        {% if data.poster_path %}
+            <img src="https://image.tmdb.org/t/p/w500{{ data.poster_path }}" alt="{{ data.name }}">
+        {% endif %}
+        <p><strong>Date de première diffusion :</strong> {{ data.first_air_date }}</p>
+        <p><strong>Note :</strong> {{ data.vote_average }}/10</p>
+        <p><strong>Nombre de votes :</strong> {{ data.vote_count }}</p>
+        <p><strong>Nombre de saisons :</strong> {{ data.number_of_seasons }}</p>
+        <p><strong>Nombre d'épisodes :</strong> {{ data.number_of_episodes }}</p>
+        <p><strong>Genres :</strong> 
+            {% for genre in data.genres %}
+                {{ genre.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p><strong>Synopsis :</strong> {{ data.overview }}</p>
+        <p><strong>Langue originale :</strong> {{ data.original_language }}</p>
+        <p><strong>Compagnies de production :</strong> 
+            {% for company in data.production_companies %}
+                {{ company.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p><strong>Pays de production :</strong> 
+            {% for country in data.production_countries %}
+                {{ country.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p><strong>Créateurs :</strong> 
+            {% for creator in data.created_by %}
+                {{ creator.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        {# <p><strong>Acteurs principaux :</strong> 
+            {% for cast in data.credits.cast|slice(0, 10) %}
+                {{ cast.name }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </p> #}
+    </div>
     <a href="{{ path('home') }}">Retour à l'accueil</a>
 
-    <h2>Toutes les données</h2>
-    <ul>
-        {% for key, value in data %}
-            <li>
-                <strong>{{ key }}:</strong>
-                {% if value is iterable %}
-                    <ul>
-                        {% for subKey, subValue in value %}
-                            {% if subValue is iterable %}
-                                <li>
-                                    <strong>{{ subKey }}:</strong>
-                                    <ul>
-                                        {% for subSubKey, subSubValue in subValue %}
-                                            <li>{{ subSubKey }}: {{ subSubValue }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% else %}
-                                <li>{{ subKey }}: {{ subValue }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    {{ value }}
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
 {% endblock %}

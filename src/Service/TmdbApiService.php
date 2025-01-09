@@ -64,7 +64,7 @@ class TmdbApiService
     
     public function fetchNowPlayingTvShows(): array
     {
-        $response = $this->client->request('GET', $this->apiBaseUrl . '/tv/on_the_air', [
+        $response = $this->client->request('GET', $this->apiBaseUrl . '/tv/top_rated', [
             'query' => [
                 'api_key' => $this->apiKey,
                 'language' => 'fr-FR',
