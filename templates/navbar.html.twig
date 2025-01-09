@@ -6,6 +6,10 @@
         <a href="{{ path('movie_now_playing') }}">Films</a>
         <a href="{{ path('tvshows_now_playing') }}">Séries</a>
         <a href="{{ path('app_register') }}">Inscription</a>
-        <a href="{{ path('app_login') }}">Connexion</a>
+        {% if app.user %}
+            <a href="{{ path('app_logout') }}">Déconnexion</a>
+        {% else %}
+            <a href="{{ path('app_login') }}">Connexion</a>
+        {% endif %}
     </div>
 </nav>
