@@ -3,33 +3,37 @@
 
 {% block body %}
 <div class="movie-details">
-        <h1>{{ data.title }}</h1>
-        {% if data.poster_path %}
-            <img src="https://image.tmdb.org/t/p/w500{{ data.poster_path }}" alt="{{ data.title }}">
-        {% endif %}
-        <p><strong>Date de sortie :</strong> {{ data.release_date }}</p>
-        <p><strong>Note :</strong> {{ data.vote_average }}/10</p>
-        <p><strong>Nombre de votes :</strong> {{ data.vote_count }}</p>
-        <p><strong>Durée :</strong> {{ data.runtime }} minutes</p>
-        <p><strong>Genres :</strong> 
-            {% for genre in data.genres %}
-                {{ genre.name }}{% if not loop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-        <p><strong>Synopsis :</strong> {{ data.overview }}</p>
-        <p><strong>Langue originale :</strong> {{ data.original_language }}</p>
-        <p><strong>Budget :</strong> ${{ data.budget|number_format(0, ',', ' ') }}</p>
-        <p><strong>Recettes :</strong> ${{ data.revenue|number_format(0, ',', ' ') }}</p>
-        <p><strong>Compagnies de production :</strong> 
-            {% for company in data.production_companies %}
-                {{ company.name }}{% if not loop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-        <p><strong>Pays de production :</strong> 
-            {% for country in data.production_countries %}
-                {{ country.name }}{% if not loop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-    </div>
-    <a href="{{ path('home') }}">Retour à l'accueil</a>
+    <h1>{{ data.title }}</h1>
+    {% if data.poster_path %}
+        <img src="https://image.tmdb.org/t/p/w500{{ data.poster_path }}" alt="{{ data.title }}">
+    {% endif %}
+    <p><strong>Date de sortie :</strong> {{ data.release_date }}</p>
+    <p><strong>Note :</strong> {{ data.vote_average }}/10</p>
+    <p><strong>Nombre de votes :</strong> {{ data.vote_count }}</p>
+    <p><strong>Durée :</strong> {{ data.runtime }} minutes</p>
+    <p><strong>Genres :</strong> 
+        {% for genre in data.genres %}
+            {{ genre.name }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    <p><strong>Synopsis :</strong> {{ data.overview }}</p>
+    <p><strong>Langue originale :</strong> {{ data.original_language }}</p>
+    <p><strong>Budget :</strong> ${{ data.budget|number_format(0, ',', ' ') }}</p>
+    <p><strong>Recettes :</strong> ${{ data.revenue|number_format(0, ',', ' ') }}</p>
+    <p><strong>Compagnies de production :</strong>
+        {% for company in data.production_companies %}
+            {{ company.name }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+</div>
+
+{# Formulaire pour ajouter le film au profil de l'utilisateur #}
+{% if app.user %}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Ajouter à mon profil</button>
+    {{ form_end(form) }}
+{% else %}
+    <p><a href="{{ path('app_login') }}">Connectez-vous</a> pour ajouter ce film à votre profil.</p>
+{% endif %}
 {% endblock %}
