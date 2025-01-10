@@ -67,4 +67,12 @@
     <a href="{{ path('app_film_faker_edit', {'id': film_faker.id}) }}">edit</a>
 
     {{ include('film_faker/_delete_form.html.twig') }}
+
+    {# Bouton pour ajouter le FilmFaker à l'utilisateur connecté #}
+    {% if app.user %}
+        <form action="{{ path('app_film_faker_add', {'id': film_faker.id}) }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token('add' ~ film_faker.id) }}">
+            <button type="submit" class="btn btn-primary">Ajouter à mon profil</button>
+        </form>
+    {% endif %}
 {% endblock %}

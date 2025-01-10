@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/film/faker')]
 final class FilmFakerController extends AbstractController
@@ -30,6 +31,7 @@ final class FilmFakerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $filmFaker->setUser($this->getUser());
             $entityManager->persist($filmFaker);
             $entityManager->flush();
 
@@ -38,7 +40,7 @@ final class FilmFakerController extends AbstractController
 
         return $this->render('film_faker/new.html.twig', [
             'film_faker' => $filmFaker,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -64,18 +66,30 @@ final class FilmFakerController extends AbstractController
 
         return $this->render('film_faker/edit.html.twig', [
             'film_faker' => $filmFaker,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_film_faker_delete', methods: ['POST'])]
     public function delete(Request $request, FilmFaker $filmFaker, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$filmFaker->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$filmFaker->getId(), $request->request->get('_token'))) {
             $entityManager->remove($filmFaker);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_film_faker_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/add', name: 'app_film_faker_add', methods: ['POST'])]
+    public function add(FilmFaker $filmFaker, EntityManagerInterface $entityManager, UserInterface $user): Response
+    {
+        $user->addFilmFaker($filmFaker);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Film ajouté à votre profil.');
+
+        return $this->redirectToRoute('app_film_faker_show', ['id' => $filmFaker->getId()]);
     }
 }
