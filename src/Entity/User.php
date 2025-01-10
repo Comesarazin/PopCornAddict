@@ -56,10 +56,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: UserTvShow::class, mappedBy: 'user')]
     private Collection $userTvShows;
 
+    /**
+     * @var Collection<int, FilmFaker>
+     */
+    #[ORM\ManyToMany(targetEntity: FilmFaker::class, mappedBy: 'UserFilmFaker')]
+    private Collection $filmFakers;
+
     public function __construct()
     {
         $this->userMovies = new ArrayCollection();
         $this->userTvShows = new ArrayCollection();
+        $this->filmFakers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +229,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->userTvShows->removeElement($userTvShow)) {
             $userTvShow->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FilmFaker>
+     */
+    public function getFilmFakers(): Collection
+    {
+        return $this->filmFakers;
+    }
+
+    public function addFilmFaker(FilmFaker $filmFaker): static
+    {
+        if (!$this->filmFakers->contains($filmFaker)) {
+            $this->filmFakers->add($filmFaker);
+            $filmFaker->addUserFilmFaker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFilmFaker(FilmFaker $filmFaker): static
+    {
+        if ($this->filmFakers->removeElement($filmFaker)) {
+            $filmFaker->removeUserFilmFaker($this);
         }
 
         return $this;
