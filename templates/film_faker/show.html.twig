@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FilmFaker{% endblock %}
+
+{% block body %}
+    <h1>FilmFaker</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ film_faker.id }}</td>
+            </tr>
+            <tr>
+                <th>MovieId</th>
+                <td>{{ film_faker.movieId }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ film_faker.title }}</td>
+            </tr>
+            <tr>
+                <th>Overview</th>
+                <td>{{ film_faker.overview }}</td>
+            </tr>
+            <tr>
+                <th>ReleaseDate</th>
+                <td>{{ film_faker.releaseDate }}</td>
+            </tr>
+            <tr>
+                <th>VoteAverage</th>
+                <td>{{ film_faker.voteAverage }}</td>
+            </tr>
+            <tr>
+                <th>VoteCount</th>
+                <td>{{ film_faker.voteCount }}</td>
+            </tr>
+            <tr>
+                <th>Runtime</th>
+                <td>{{ film_faker.runtime }}</td>
+            </tr>
+            <tr>
+                <th>OriginalLanguage</th>
+                <td>{{ film_faker.originalLanguage }}</td>
+            </tr>
+            <tr>
+                <th>Budget</th>
+                <td>{{ film_faker.budget }}</td>
+            </tr>
+            <tr>
+                <th>Revenue</th>
+                <td>{{ film_faker.revenue }}</td>
+            </tr>
+            <tr>
+                <th>Genres</th>
+                <td>{{ film_faker.genres }}</td>
+            </tr>
+            <tr>
+                <th>ProductionCompanies</th>
+                <td>{{ film_faker.productionCompanies }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_film_faker_index') }}">back to list</a>
+
+    <a href="{{ path('app_film_faker_edit', {'id': film_faker.id}) }}">edit</a>
+
+    {{ include('film_faker/_delete_form.html.twig') }}
+{% endblock %}
