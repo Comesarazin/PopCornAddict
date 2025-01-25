@@ -8,6 +8,7 @@
         <a href="{{ path('app_film_faker_index') }}">Fakers</a>
         <a href="{{ path('app_register') }}">Inscription</a>
         {% if app.user %}
+            <a href="{{ path('app_user_profile') }}">Mon Profil</a>
             <a href="{{ path('app_logout') }}">Déconnexion</a>
         {% else %}
             <a href="{{ path('app_login') }}">Connexion</a>
