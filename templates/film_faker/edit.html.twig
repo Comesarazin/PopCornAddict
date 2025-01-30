@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit FilmFaker{% endblock %}
+
+{% block body %}
+    <h1>Edit FilmFaker</h1>
+
+    {{ include('film_faker/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_film_faker_index') }}">back to list</a>
+
+    {{ include('film_faker/_delete_form.html.twig') }}
+{% endblock %}

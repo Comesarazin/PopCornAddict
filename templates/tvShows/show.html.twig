@@ -34,12 +34,15 @@
                 {{ creator.name }}{% if not loop.last %}, {% endif %}
             {% endfor %}
         </p>
-        {# <p><strong>Acteurs principaux :</strong> 
-            {% for cast in data.credits.cast|slice(0, 10) %}
-                {{ cast.name }}{% if not loop.last %}, {% endif %}
-            {% endfor %}
-        </p> #}
     </div>
-    <a href="{{ path('home') }}">Retour à l'accueil</a>
 
+    {# Formulaire pour ajouter la série au profil de l'utilisateur #}
+    {% if app.user %}
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit">Ajouter à mon profil</button>
+        {{ form_end(form) }}
+    {% else %}
+        <p><a href="{{ path('app_login') }}">Connectez-vous</a> pour ajouter cette série à votre profil.</p>
+    {% endif %}
 {% endblock %}

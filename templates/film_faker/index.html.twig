@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FilmFaker index{% endblock %}
+
+{% block body %}
+    <h1>FilmFaker index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>MovieId</th>
+                <th>Title</th>
+                <th>Overview</th>
+                <th>ReleaseDate</th>
+                <th>VoteAverage</th>
+                <th>VoteCount</th>
+                <th>Runtime</th>
+                <th>OriginalLanguage</th>
+                <th>Budget</th>
+                <th>Revenue</th>
+                <th>Genres</th>
+                <th>ProductionCompanies</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for film_faker in film_fakers %}
+            <tr>
+                <td>{{ film_faker.id }}</td>
+                <td>{{ film_faker.movieId }}</td>
+                <td>{{ film_faker.title }}</td>
+                <td>{{ film_faker.overview }}</td>
+                <td>{{ film_faker.releaseDate }}</td>
+                <td>{{ film_faker.voteAverage }}</td>
+                <td>{{ film_faker.voteCount }}</td>
+                <td>{{ film_faker.runtime }}</td>
+                <td>{{ film_faker.originalLanguage }}</td>
+                <td>{{ film_faker.budget }}</td>
+                <td>{{ film_faker.revenue }}</td>
+                <td>{{ film_faker.genres }}</td>
+                <td>{{ film_faker.productionCompanies }}</td>
+                <td>
+                    <a href="{{ path('app_film_faker_show', {'id': film_faker.id}) }}">show</a>
+                    <a href="{{ path('app_film_faker_edit', {'id': film_faker.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_film_faker_new') }}">Create new</a>
+{% endblock %}

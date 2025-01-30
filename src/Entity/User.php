@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -18,18 +19,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -41,6 +36,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    /**
+     * @var Collection<int, UserMovie>
+     */
+    #[ORM\ManyToMany(targetEntity: UserMovie::class, inversedBy: 'users')]
+    private Collection $userMovies;
+
+    /**
+     * @var Collection<int, UserTvShow>
+     */
+    #[ORM\ManyToMany(targetEntity: UserTvShow::class, inversedBy: 'users')]
+    private Collection $userTvShows;
+
+    /**
+     * @var Collection<int, FilmFaker>
+     */
+    #[ORM\ManyToMany(targetEntity: FilmFaker::class, inversedBy: 'users')]
+    private Collection $filmFakers;
+
+    public function __construct()
+    {
+        $this->userMovies = new ArrayCollection();
+        $this->userTvShows = new ArrayCollection();
+        $this->filmFakers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -149,6 +169,87 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserMovie>
+     */
+    public function getUserMovies(): Collection
+    {
+        return $this->userMovies;
+    }
+
+    public function addUserMovie(UserMovie $userMovie): static
+    {
+        if (!$this->userMovies->contains($userMovie)) {
+            $this->userMovies->add($userMovie);
+            $userMovie->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserMovie(UserMovie $userMovie): static
+    {
+        if ($this->userMovies->removeElement($userMovie)) {
+            $userMovie->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserTvShow>
+     */
+    public function getUserTvShows(): Collection
+    {
+        return $this->userTvShows;
+    }
+
+    public function addUserTvShow(UserTvShow $userTvShow): static
+    {
+        if (!$this->userTvShows->contains($userTvShow)) {
+            $this->userTvShows->add($userTvShow);
+            $userTvShow->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserTvShow(UserTvShow $userTvShow): static
+    {
+        if ($this->userTvShows->removeElement($userTvShow)) {
+            $userTvShow->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FilmFaker>
+     */
+    public function getFilmFakers(): Collection
+    {
+        return $this->filmFakers;
+    }
+
+    public function addFilmFaker(FilmFaker $filmFaker): static
+    {
+        if (!$this->filmFakers->contains($filmFaker)) {
+            $this->filmFakers->add($filmFaker);
+            $filmFaker->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFilmFaker(FilmFaker $filmFaker): static
+    {
+        if ($this->filmFakers->removeElement($filmFaker)) {
+            $filmFaker->removeUser($this);
+        }
 
         return $this;
     }

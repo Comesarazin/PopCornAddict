@@ -30,8 +30,24 @@ class TmdbApiService
             
             return $response->toArray()['results'];
         } catch (\Exception $e) {
-            // Gérer l'erreur (par exemple, en journalisant l'erreur et en renvoyant un tableau vide)
-            // Vous pouvez également ajouter un message flash pour informer l'utilisateur
+            error_log($e->getMessage());
+            return [];
+        }
+    }
+
+    public function searchTvShows(string $query): array
+    {
+        try {
+            $response = $this->client->request('GET', $this->apiBaseUrl . '/search/tv', [
+                'query' => [
+                    'api_key' => $this->apiKey,
+                    'language' => 'fr-FR',
+                    'query' => $query,
+                ],
+            ]);
+
+            return $response->toArray()['results'];
+        } catch (\Exception $e) {
             error_log($e->getMessage());
             return [];
         }
@@ -49,31 +65,6 @@ class TmdbApiService
         return $response->toArray();
     }
 
-    
-    public function fetchNowPlayingMovies(): array
-    {
-        $response = $this->client->request('GET', $this->apiBaseUrl . '/movie/now_playing', [
-            'query' => [
-                'api_key' => $this->apiKey,
-                'language' => 'fr-FR',
-            ],
-        ]);
-        
-        return $response->toArray()['results'];
-    }
-    
-    public function fetchNowPlayingTvShows(): array
-    {
-        $response = $this->client->request('GET', $this->apiBaseUrl . '/tv/top_rated', [
-            'query' => [
-                'api_key' => $this->apiKey,
-                'language' => 'fr-FR',
-            ],
-        ]);
-        
-        return $response->toArray()['results'];
-    }
-    
     public function fetchTvShowData(string $tvShowId): array
     {
         $response = $this->client->request('GET', $this->apiBaseUrl . '/tv/' . $tvShowId, [
@@ -86,22 +77,27 @@ class TmdbApiService
         return $response->toArray();
     }
 
-    public function searchTvShows(string $query): array
+    public function fetchNowPlayingMovies(): array
     {
-        try {
-            $response = $this->client->request('GET', $this->apiBaseUrl . '/search/tv', [
-                'query' => [
-                    'api_key' => $this->apiKey,
-                    'language' => 'fr-FR',
-                    'query' => $query,
-                ],
-            ]);
+        $response = $this->client->request('GET', $this->apiBaseUrl . '/movie/now_playing', [
+            'query' => [
+                'api_key' => $this->apiKey,
+                'language' => 'fr-FR',
+            ],
+        ]);
+        
+        return $response->toArray()['results'];
+    }
 
-            return $response->toArray()['results'];
-        } catch (\Exception $e) {
-            // Gérer l'erreur (par exemple, en journalisant l'erreur et en renvoyant un tableau vide)
-            // Vous pouvez également ajouter un message flash pour informer l'utilisateur
-            return [];
-        }
+    public function fetchNowPlayingTvShows(): array
+    {
+        $response = $this->client->request('GET', $this->apiBaseUrl . '/tv/on_the_air', [
+            'query' => [
+                'api_key' => $this->apiKey,
+                'language' => 'fr-FR',
+            ],
+        ]);
+        
+        return $response->toArray()['results'];
     }
 }
