@@ -57,6 +57,12 @@ final class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user, UserMovieRepository $userMovieRepository, UserTvShowRepository $userTvShowRepository, FilmFakerRepository $filmFakerRepository): Response
     {
+        $user = $this->security->getUser();
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+        
         $movies = $userMovieRepository->findBy(['users' => $user]);
         $tvShows = $userTvShowRepository->findBy(['users' => $user]);
         $filmFakers = $filmFakerRepository->findBy(['users' => $user]);
