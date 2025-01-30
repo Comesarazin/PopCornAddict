@@ -3,56 +3,34 @@
 {% block title %}User{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ user.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ user.nom }}</td>
-            </tr>
-            <tr>
-                <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
-
     <h1>Profil de {{ user.nom }}</h1>
 
-    <h2>Films ajoutés</h2>
-    <ul>
-        {% for movie in movies %}
-            <li>{{ movie.title }}</li>
-        {% endfor %}
-    </ul>
+    {% if movies is not empty %}
+        <h2>Films ajoutés</h2>
+        <ul>
+            {% for movie in movies %}
+                <li>{{ movie.title }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-    <h2>Séries ajoutées</h2>
-    <ul>
-        {% for tvShow in tvShows %}
-            <li>{{ tvShow.name }}</li>
-        {% endfor %}
-    </ul>
+    {% if tvShows is not empty %}
+        <h2>Séries ajoutées</h2>
+        <ul>
+            {% for tvShow in tvShows %}
+                <li>{{ tvShow.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if filmFakers is not empty %}
+        <h2>FilmFakers ajoutés</h2>
+        <ul>
+            {% for filmFaker in filmFakers %}
+                <li>{{ filmFaker.title }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
     <a href="{{ path('app_user_index') }}">back to list</a>
 

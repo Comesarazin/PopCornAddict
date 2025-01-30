@@ -22,45 +22,45 @@ class FilmFaker
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $overview = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $releaseDate = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'float', nullable: true)]
     private ?float $voteAverage = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $voteCount = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $runtime = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $originalLanguage = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $budget = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $revenue = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $genres = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $productionCompanies = null;
 
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'filmFakers')]
-    private Collection $UserFilmFaker;
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'filmFakers')]
+    private Collection $users;
 
     public function __construct()
     {
-        $this->UserFilmFaker = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,23 +215,26 @@ class FilmFaker
     /**
      * @return Collection<int, User>
      */
-    public function getUserFilmFaker(): Collection
+    public function getUsers(): Collection
     {
-        return $this->UserFilmFaker;
+        return $this->users;
     }
 
-    public function addUserFilmFaker(User $userFilmFaker): static
+    public function addUser(User $user): static
     {
-        if (!$this->UserFilmFaker->contains($userFilmFaker)) {
-            $this->UserFilmFaker->add($userFilmFaker);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addFilmFaker($this);
         }
 
         return $this;
     }
 
-    public function removeUserFilmFaker(User $userFilmFaker): static
+    public function removeUser(User $user): static
     {
-        $this->UserFilmFaker->removeElement($userFilmFaker);
+        if ($this->users->removeElement($user)) {
+            $user->removeFilmFaker($this);
+        }
 
         return $this;
     }

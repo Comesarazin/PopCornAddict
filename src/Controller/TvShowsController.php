@@ -35,6 +35,10 @@ class TvShowsController extends AbstractController
     #[Route('/tvshows/{id}', name: 'tvshows_show')]
     public function show(string $id, Request $request, EntityManagerInterface $entityManager, UserInterface $user = null): Response
     {
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+
         $data = $this->tmdbApiService->fetchTvShowData($id);
 
         $userTvShow = new UserTvShow();
@@ -54,7 +58,7 @@ class TvShowsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userTvShow->setUser($user);
+            $userTvShow->addUser($user); // Utilisez addUser au lieu de setUser
             $entityManager->persist($userTvShow);
             $entityManager->flush();
 

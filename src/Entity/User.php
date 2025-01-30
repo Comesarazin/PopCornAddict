@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -20,18 +19,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -47,19 +40,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, UserMovie>
      */
-    #[ORM\ManyToMany(targetEntity: UserMovie::class, mappedBy: 'user')]
+    #[ORM\ManyToMany(targetEntity: UserMovie::class, inversedBy: 'users')]
     private Collection $userMovies;
 
     /**
      * @var Collection<int, UserTvShow>
      */
-    #[ORM\ManyToMany(targetEntity: UserTvShow::class, mappedBy: 'user')]
+    #[ORM\ManyToMany(targetEntity: UserTvShow::class, inversedBy: 'users')]
     private Collection $userTvShows;
 
     /**
      * @var Collection<int, FilmFaker>
      */
-    #[ORM\ManyToMany(targetEntity: FilmFaker::class, mappedBy: 'UserFilmFaker')]
+    #[ORM\ManyToMany(targetEntity: FilmFaker::class, inversedBy: 'users')]
     private Collection $filmFakers;
 
     public function __construct()
@@ -246,7 +239,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->filmFakers->contains($filmFaker)) {
             $this->filmFakers->add($filmFaker);
-            $filmFaker->addUserFilmFaker($this);
+            $filmFaker->addUser($this);
         }
 
         return $this;
@@ -255,7 +248,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFilmFaker(FilmFaker $filmFaker): static
     {
         if ($this->filmFakers->removeElement($filmFaker)) {
-            $filmFaker->removeUserFilmFaker($this);
+            $filmFaker->removeUser($this);
         }
 
         return $this;

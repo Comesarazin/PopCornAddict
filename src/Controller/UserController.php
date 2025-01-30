@@ -7,6 +7,7 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Repository\UserMovieRepository;
 use App\Repository\UserTvShowRepository;
+use App\Repository\FilmFakerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,26 +55,22 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(UserMovieRepository $userMovieRepository, UserTvShowRepository $userTvShowRepository): Response
+    public function show(User $user, UserMovieRepository $userMovieRepository, UserTvShowRepository $userTvShowRepository, FilmFakerRepository $filmFakerRepository): Response
     {
-        $user = $this->security->getUser();
-
-        if (!$user) {
-            throw $this->createNotFoundException('Utilisateur non trouvé.');
-        }
-
-        $movies = $userMovieRepository->findBy(['user' => $user]);
-        $tvShows = $userTvShowRepository->findBy(['user' => $user]);
+        $movies = $userMovieRepository->findBy(['users' => $user]);
+        $tvShows = $userTvShowRepository->findBy(['users' => $user]);
+        $filmFakers = $filmFakerRepository->findBy(['users' => $user]);
 
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'movies' => $movies,
             'tvShows' => $tvShows,
+            'filmFakers' => $filmFakers,
         ]);
     }
 
     #[Route('/profile', name: 'app_user_profile', methods: ['GET'])]
-    public function profile(UserMovieRepository $userMovieRepository, UserTvShowRepository $userTvShowRepository): Response
+    public function profile(UserMovieRepository $userMovieRepository, UserTvShowRepository $userTvShowRepository, FilmFakerRepository $filmFakerRepository): Response
     {
         $user = $this->security->getUser();
 
@@ -81,13 +78,15 @@ final class UserController extends AbstractController
             throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
 
-        $movies = $userMovieRepository->findBy(['user' => $user]);
-        $tvShows = $userTvShowRepository->findBy(['user' => $user]);
+        $movies = $userMovieRepository->findBy(['users' => $user]);
+        $tvShows = $userTvShowRepository->findBy(['users' => $user]);
+        $filmFakers = $filmFakerRepository->findBy(['users' => $user]);
 
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'movies' => $movies,
             'tvShows' => $tvShows,
+            'filmFakers' => $filmFakers,
         ]);
     }
 
