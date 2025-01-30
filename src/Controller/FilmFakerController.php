@@ -31,7 +31,6 @@ final class FilmFakerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $filmFaker->setUser($this->getUser());
             $entityManager->persist($filmFaker);
             $entityManager->flush();
 

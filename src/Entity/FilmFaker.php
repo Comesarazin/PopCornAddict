@@ -97,7 +97,7 @@ class FilmFaker
         return $this->overview;
     }
 
-    public function setOverview(string $overview): static
+    public function setOverview(?string $overview): static
     {
         $this->overview = $overview;
 

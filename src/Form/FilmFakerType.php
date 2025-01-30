@@ -26,7 +26,7 @@ class FilmFakerType extends AbstractType
             ->add('revenue')
             ->add('genres')
             ->add('productionCompanies')
-            ->add('UserFilmFaker', EntityType::class, [
+            ->add('users', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'id',
                 'multiple' => true,
